@@ -2,16 +2,16 @@ settings.outformat = "pdf";
 settings.prc = false;
 settings.render = 0;
 
+import geometry3d;
 import three;
 import graph3;
-import geometry3d;
 
 import graph;
 import patterns;
 real H=1.5mm;
 
 
-projection P = orthographic(2,-7,2);
+projection P = orthographic(0,-9,3);
 pair dir=N+E*3;
 //projection P = orthographic((-2,-5,7));
 add("hatch", hatch(H, dir, linewidth(0.2)));
@@ -22,7 +22,7 @@ add("hatchback",shift(5)*rotate(90)*hatch(H, dir, linewidth(0.1)));
 
 currentprojection = P;
 
-size3(7cm);
+size3(6cm);
 
 
 revolution s = sphere(O, 1);
@@ -31,7 +31,7 @@ real xa = .6;
 real ya = -.7;
 real xb = .8;
 real yb = -.5;
-real xc = 0;
+real xc = .2;
 real yc = -.9;
 
 
@@ -64,7 +64,7 @@ triple tri(pair p){
 };
 
 
-{
+
 triple Q = intersectionpoint(Arc(O,Ap,C), Circle(O,1,P.normal));
 triple T = intersectionpoint(Arc(O,B,Ap), Circle(O,1,P.normal));
 triple Qp = intersectionpoint(Arc(O,Ap,C,CW), Circle(O,1,P.normal));
@@ -104,9 +104,25 @@ path t1 = project3(arcApQ..arcQT..arcTAp..cycle);
 fill(t1, pattern("hatchback"));
 
 
+path3 u = Arc(O,A,T)..Arc(O,T,Ap);
+path3 v = Arc(O,Ap,Q)..Arc(O,Q,A);
+
+triple L = midpoint(u);
+triple M = midpoint(v);
+
+draw(M--O);
+draw(L--O, linetype(new real[] {13,6}));
+
+
+
 draw(arcAQ^^arcTA,linewidth(1.1));
 draw(arcApQ^^arcTAp, linetype(new real[] {8,4}) +linewidth(1.1));
 draw(A--Ap,linetype(new real[] {13,6})+linewidth(.4));
+
+
+opendot(M);
+opendot(L);
+
 //path3 sphr_trin1 = arcAQ ..  .. arcApC .. arcCA .. cycle;
 
 //path tri = project3(sphr_trin);
@@ -117,7 +133,20 @@ draw(A--Ap,linetype(new real[] {13,6})+linewidth(.4));
 draw(Arc(O,Qp,A)^^Arc(O,Tp,A));
 draw(Arc(O,Qp,Ap)^^Arc(O,Tp,Ap), linetype(new real[] {13,6}));
 
-}
+//markangle3(Label("$\psi$", fontsize(10)), M,O,L,radius=0.15);
+//markangle3(M,O,L,radius=0.15, arrow3=Arrow3(), filltype_=Fill(red));
+markangle3(M,O,L,radius=0.15);
+
+transform3 y = shift(A-O);
+
+draw(y*(O--M));
+draw(y*(O--L));
+markangle3(y*M,A,y*L,radius=0.15);
+
+
+
+
+
 //draw(w^^e(1,X)*w);
 //draw(w);
 //draw(shift(0.1*cross(O-C,O-B))*w);
@@ -147,11 +176,14 @@ draw(Arc(O,Qp,Ap)^^Arc(O,Tp,Ap), linetype(new real[] {13,6}));
 //draw
 //draw(s.silhouette(), linewidth(1.1));
 
-dot("$A$", A, N+E);
-dot("$A'$", Ap, S+W*1.9);
+opendot("$A$", A, N+E);
+opendot("$A'$", Ap, S+W*1.9);
 //dot("$B$", B, SW);
 //dot("$C$", C, SE);
-dot("$O$", O, NW);
+
+opendot("$O$", O, NW);
+
+
 
 
 
